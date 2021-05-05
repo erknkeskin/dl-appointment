@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment | All Appointments</title>
+    {% include  'includes/css.html' %}
+</head>
+<body>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="delete_appointment_id" id="delete_appointment_id" value=""/>
+                <p>Randevu silinecektir! Silmeyi onaylıyor musunuz ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="delete_appointment()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="formModalLabel">Add Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="appointment-form">
+                    <input type="hidden" name="appointment_id" id="appointment_id" value="0"/>
+                    <div class="input-group">
+                        <label for="appointment_title" class="w-100">Title</label>
+                        <input type="text" value="" name="appointment_title" id="appointment_title"
+                               class="form-control app-input" placeholder="Title">
+                    </div>
+                    <div class="input-group mt-3">
+                        <label for="appointment_date" class="w-100">Date</label>
+                        <input type="text" value="" name="appointment_date" id="appointment_date"
+                               class="form-control app-input" placeholder="Date">
+                    </div>
+                    <div class="input-group mt-3">
+                        <label for="appointment_detail" class="w-100">Detail</label>
+                        <textarea name="appointment_detail" id="appointment_detail" class="form-control app-input"
+                                  placeholder="Detail"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="save_appointment()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid px-0">
+    {% include  'includes/navigation.html' %}
+
+    <div class="appointments container">
+        <h1>All Appointments</h1>
+        {% if datas.appointments == None %}
+            <h2>No records</h2>
+        {% else %}
+            <div class="table w-100 mt-5">
+                <div class="d-flex justify-content-end">
+                    <a href="#"
+                       class="btn rounded-pill mb-2 text-white badge bg-success">today</a>
+                </div>
+                <div class="header bg-info py-1 rounded-3">
+                    <ul class="d-flex justify-content-between text-white">
+                        <li>ID</li>
+                        <li>Title</li>
+                        <li>Date</li>
+                        <li>Action</li>
+                    </ul>
+                </div>
+                {% for appointment in datas.appointments %}
+                    <div class="body py-2 rounded-3 my-2" data-row="row-{{ appointment.appointment_id }}">
+                        <ul class="d-flex justify-content-between">
+                            <li>{{ appointment.appointment_id }}</li>
+                            <li>{{ appointment.appointment_title }}</li>
+                            <li>{{ appointment.appointment_date|date_string_format }}</li>
+                            <li>
+                                <ul>
+                                    <li><a role="button"
+                                           onclick="get_appointment('{{ appointment.appointment_id }}')"
+                                           data-bs-toggle="modal" data-bs-target="#formModal"><i
+                                            class="fas fa-edit"></i></a></li>
+                                    <li><a role="button"
+                                           onclick="delete_appointment_confirm('{{ appointment.appointment_id }}')"
+                                           data-bs-toggle="modal" data-bs-target="#deleteModal"><i
+                                            class="fas fa-trash"></i></a></li>
+                                    <li>
+                                        <input type="checkbox"
+                                               onchange="change_appointment_status('{{ appointment.appointment_id }}', '{{ appointment.appointment_status|new_appointment_status }}')"
+                                               id="switch_appointment_status" class="position-absolute"
+                                               {% if appointment.appointment_status == 1 %}checked{% endif %}/><label
+                                            for="switch_appointment_status">Toggle</label>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-center">
+                <button onclick="load_more()" class="btn_load_more btn btn-success mb-5">load more</button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<a role="button" data-bs-toggle="modal" data-bs-target="#formModal"
+   class="btn btn-success btn-add rounded-circle position-fixed">
+    <i class="fas fa-plus fa-3x text-white"></i>
+</a>
+{% include  'includes/script.html' %}
+</body>
+</html>
