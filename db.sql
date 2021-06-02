@@ -140,7 +140,7 @@ COPY public.appointment (appointment_id, appointment_title, appointment_detail, 
 --
 
 COPY public."user" (user_id, user_fullname, user_email, user_password, user_created, user_modified, user_status) FROM stdin;
-2	Erkan Keskin	keskin.erkan@gmail.com	123123*	2021-05-05 21:17:08	2021-05-05 21:17:08	1
+2	Erkan Keskin	admin@example.com test 2021-05-05 21:17:08	2021-05-05 21:17:08	1
 \.
 
 
