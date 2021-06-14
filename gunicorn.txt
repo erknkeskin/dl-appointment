@@ -1,0 +1,9 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/path_to_site_folder
+ExecStart=/path_to_site_folder/venv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/path_to_site_folder/dlapp.sock wsgi:app
